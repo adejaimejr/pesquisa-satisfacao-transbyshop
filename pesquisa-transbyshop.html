@@ -561,14 +561,13 @@
   <div class="card-body">
     <form id="csatForm">
 
-      <input type="hidden" name="empresa"    id="empresa" />
-      <input type="hidden" name="firstname"  id="firstname" />
-      <input type="hidden" name="codcliente" id="codcliente" />
-      <input type="hidden" name="filial"     id="filial" />
-      <input type="hidden" name="telefone"   id="telefone" />
       <input type="hidden" name="timestamp"  id="timestamp" />
-      <input type="hidden" name="motivos"    id="motivosHidden" />
       <input type="hidden" name="data_venda" id="data_venda" />
+      <input type="hidden" name="codcliente" id="codcliente" />
+      <input type="hidden" name="firstname"  id="firstname" />
+      <input type="hidden" name="telefone"   id="telefone" />
+      <input type="hidden" name="filial"     id="filial" />
+      <input type="hidden" name="motivos"    id="motivosHidden" />
 
       <!-- 1. Nota -->
       <div class="section">
@@ -690,13 +689,12 @@ window.addEventListener('DOMContentLoaded', () => {
   // ── Parâmetros URL ──
   const p = new URLSearchParams(window.location.search);
   const nome = p.get('firstname') || '';
-  document.getElementById('empresa').value    = 'TransbyShop';
-  document.getElementById('firstname').value  = nome;
-  document.getElementById('codcliente').value = p.get('codcliente') || '';
-  document.getElementById('filial').value     = p.get('filial')     || '';
-  document.getElementById('telefone').value   = p.get('telefone')   || '';
-  document.getElementById('data_venda').value = p.get('data_venda') || '';
   document.getElementById('timestamp').value  = new Date().toISOString();
+  document.getElementById('data_venda').value = p.get('data_venda') || '';
+  document.getElementById('codcliente').value = p.get('codcliente') || '';
+  document.getElementById('firstname').value  = nome;
+  document.getElementById('telefone').value   = p.get('telefone')   || '';
+  document.getElementById('filial').value     = p.get('filial')     || '';
 
   // Eyebrow personalizado
   const eyebrow = document.querySelector('.header-eyebrow');
