@@ -803,6 +803,7 @@ window.addEventListener('DOMContentLoaded', () => {
       .then(res => {
         if (res.ok) {
           document.getElementById('csatForm').style.display = 'none';
+          document.querySelector('.card-header').style.display = 'none';
           document.getElementById('successScreen').style.display = 'block';
         } else {
           alert('Erro ao enviar. Tente novamente.');
