@@ -438,35 +438,33 @@
     /* ── Success ── */
     .success-screen {
       display: none;
-      padding: 0;
       animation: cardIn 0.5s cubic-bezier(.16,1,.3,1) both;
-    }
-
-    .success-header {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, #7a1540 100%);
-      padding: 32px 28px 28px;
-      text-align: center;
+      background: linear-gradient(160deg, var(--primary-dark) 0%, var(--primary) 45%, #7a1540 100%);
+      border-radius: var(--r-lg);
+      min-height: 500px;
       position: relative;
       overflow: hidden;
+      padding: 48px 28px 44px;
+      text-align: center;
     }
-    .success-header::before {
+    .success-screen::before {
       content: '';
       position: absolute;
-      width: 220px; height: 220px;
+      width: 280px; height: 280px;
       background: rgba(255,255,255,0.05);
       border-radius: 50%;
-      top: -90px; right: -70px;
+      top: -100px; right: -80px;
     }
-    .success-header::after {
+    .success-screen::after {
       content: '';
       position: absolute;
-      width: 150px; height: 150px;
+      width: 200px; height: 200px;
       background: rgba(255,255,255,0.04);
       border-radius: 50%;
-      bottom: -55px; left: -45px;
+      bottom: -70px; left: -60px;
     }
     .success-logo {
-      margin-bottom: 20px;
+      margin-bottom: 32px;
       position: relative;
       z-index: 1;
     }
@@ -475,65 +473,72 @@
       width: auto;
       filter: brightness(0) invert(1);
     }
+    .success-check {
+      width: 68px; height: 68px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .success-check svg {
+      width: 32px; height: 32px;
+    }
     .success-eyebrow {
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.55);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       position: relative;
       z-index: 1;
     }
-    .success-header h2 {
+    .success-screen h2 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 6vw, 2.2rem);
+      font-size: clamp(2.2rem, 8vw, 2.8rem);
       font-weight: 700;
       color: #fff;
-      line-height: 1.15;
+      line-height: 1.1;
+      margin-bottom: 20px;
       position: relative;
       z-index: 1;
     }
-    .success-header h2 em { font-style: italic; opacity: 0.88; }
-
-    .success-body {
-      padding: 36px 28px 40px;
-      text-align: center;
+    .success-screen h2 em { font-style: italic; opacity: 0.88; }
+    .success-divider {
+      width: 48px;
+      height: 2px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+      position: relative;
+      z-index: 1;
     }
-    .success-check {
-      width: 60px; height: 60px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent2) 100%);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 22px;
-      box-shadow: 0 6px 24px rgba(87,13,50,0.22);
-    }
-    .success-check svg {
-      width: 28px; height: 28px;
-    }
-    .success-body p {
+    .success-screen p {
       font-size: 14.5px;
-      color: var(--text-muted);
+      color: rgba(255,255,255,0.75);
       line-height: 1.7;
-      max-width: 300px;
-      margin: 0 auto 24px;
+      max-width: 280px;
+      margin: 0 auto 32px;
+      position: relative;
+      z-index: 1;
     }
-    .success-body p strong {
-      color: var(--text-main);
-      font-weight: 600;
-    }
+    .success-screen p strong { color: #fff; font-weight: 600; }
     .success-tag {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: var(--blush);
-      border: 1.5px solid var(--blush-mid);
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.2);
       border-radius: 999px;
-      padding: 9px 18px;
-      font-size: 12.5px;
+      padding: 11px 22px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--primary);
-      letter-spacing: 0.02em;
+      color: rgba(255,255,255,0.9);
+      position: relative;
+      z-index: 1;
     }
 
     @media (max-width: 390px) {
@@ -661,24 +666,19 @@
 
     <!-- Sucesso -->
     <div class="success-screen" id="successScreen">
-      <div class="success-header">
-        <div class="success-logo">
-          <img src="logo-1.svg" alt="TransbyShop" />
-        </div>
-        <div class="success-eyebrow">Avaliação registrada</div>
-        <h2>Muito<br><em>obrigado!</em></h2>
+      <div class="success-logo">
+        <img src="logo-1.svg" alt="TransbyShop" />
       </div>
-      <div class="success-body">
-        <div class="success-check">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12l4.5 4.5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p>Sua opinião é muito importante para nós.<br>Ela nos ajuda a entregar cada vez <strong>mais valor para o seu negócio</strong>.</p>
-        <div class="success-tag">
-          🛍️ Boas vendas, TransbyShop agradece!
-        </div>
+      <div class="success-check">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12l4.5 4.5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
+      <div class="success-eyebrow">Avaliação registrada</div>
+      <h2>Muito<br><em>obrigado!</em></h2>
+      <div class="success-divider"></div>
+      <p>Sua opinião é muito importante para nós.<br>Ela nos ajuda a entregar cada vez <strong>mais valor para o seu negócio</strong>.</p>
+      <div class="success-tag">🛍️ Boas vendas, TransbyShop agradece!</div>
     </div>
   </div>
 </div>
