@@ -43,24 +43,6 @@
       padding: 24px 14px 52px;
     }
 
-    /* Quando mostra tela final, body sem padding e card ocupa tudo */
-    body.full-screen {
-      padding: 0;
-      align-items: stretch;
-      background: #570d32;
-    }
-    body.full-screen .card {
-      border-radius: 0;
-      box-shadow: none;
-      max-width: 100%;
-      min-height: 100vh;
-      border: none;
-    }
-    body.full-screen .success-screen {
-      min-height: 100vh;
-      border-radius: 0;
-    }
-
     body::before {
       content: '';
       position: fixed;
@@ -465,9 +447,6 @@
       padding: 48px 28px 44px;
       text-align: center;
     }
-    .success-screen.visible {
-      display: block;
-    }
     .success-screen::before {
       content: '';
       position: absolute;
@@ -806,8 +785,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('loadingOverlay').classList.add('hidden');
       if (jaRespondeu) {
         document.querySelector('.card-header').style.display = 'none';
-        document.getElementById('alreadyScreen').classList.add('visible');
-        document.body.classList.add('full-screen');
+        document.getElementById('alreadyScreen').style.display = 'block';
       } else {
         document.getElementById('csatForm').style.display = 'block';
       }
@@ -919,8 +897,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           document.getElementById('csatForm').style.display = 'none';
           document.querySelector('.card-header').style.display = 'none';
-          document.getElementById('successScreen').classList.add('visible');
-          document.body.classList.add('full-screen');
+          document.getElementById('successScreen').style.display = 'block';
         } else {
           alert('Erro ao enviar. Tente novamente.');
           submitBtn.disabled    = false;
