@@ -750,6 +750,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const eyebrow = document.querySelector('.header-eyebrow');
   if (nome) eyebrow.textContent = `${nome}, sua opinião importa`;
 
+  // Remove params da URL sem recarregar a página
+  history.replaceState(null, '', window.location.pathname);
+
   // ── Verifica se já respondeu (com loading + 3 retries) ──
   const codcliente = p.get('codcliente') || '';
   const data_venda = p.get('data_venda') || '';
