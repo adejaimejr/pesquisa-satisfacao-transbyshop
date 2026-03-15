@@ -798,6 +798,13 @@ window.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled    = true;
     submitBtn.textContent = 'Enviando…';
 
+    // Debug — abre o console do browser para ver
+    const formDataDebug = new FormData(this);
+    console.log('=== DEBUG CSAT ===');
+    for (let [key, value] of formDataDebug.entries()) {
+      console.log(key + ': ' + value);
+    }
+
     const APPS_SCRIPT_URL = '__APPS_SCRIPT_URL__';
 
     fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(this) })
