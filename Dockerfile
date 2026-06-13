@@ -1,13 +1,11 @@
 FROM nginx:alpine
 
-# Pesquisa (formulário CSAT — recebe a env var APPS_SCRIPT_URL via entrypoint)
-COPY pesquisa-transbyshop.html /usr/share/nginx/html/index.html
-COPY logo-1.svg /usr/share/nginx/html/logo-1.svg
+# Motor (template) + clientes (config/logo/relatorios) + server nginx
+COPY engine/                    /engine/
+COPY clientes/                  /clientes/
+COPY engine/nginx.conf.template /etc/nginx/conf.d/default.conf
 
-# Relatórios executivos (HTML autocontido — sem dependência externa)
-COPY relatorios/ /usr/share/nginx/html/
-
-# Script de entrypoint que injeta a env var antes de subir o nginx
+# Entrypoint multi-tenant: renderiza um index.html por cliente e gera o map de domínios
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 

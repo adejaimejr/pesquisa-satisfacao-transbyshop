@@ -1,0 +1,16 @@
+# Server multi-tenant. Roteia por $host → pasta do cliente (var $tenant_root
+# definida no map gerado em runtime: /etc/nginx/conf.d/00-tenant-map.conf).
+# Copiado p/ /etc/nginx/conf.d/default.conf no build.
+
+server {
+    listen 80 default_server;
+    server_name _;
+
+    root  $tenant_root;
+    index index.html;
+
+    # Survey (/) + relatórios (/relatorio-*.html) servidos da pasta do tenant.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
