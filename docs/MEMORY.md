@@ -77,7 +77,8 @@ Exemplo de entrada: "Issues do produto X sao trackeadas no Linear projeto INGEST
 
 ### Project
 
-- 
+- **Apps Script CSAT — dedup ("já respondeu") quebra por coerção de tipo do Sheets.** `appendRow("2026-01-01")` na coluna `data_venda` faz o Sheets converter a string em `Date`; o `doGet` comparava `String(Date)` (`"Mon Jan 01 2026…"`) com a string da URL e nunca casava → cliente responde infinitas vezes. **Fix que NÃO serve:** forçar a coluna como texto via `setNumberFormat('@')` — lança `"Não é possível definir o formato de número das células em uma coluna com tipo"` em abas com *column type*/Tabela e **aborta o POST** (`ok:false`). **Fix final (v4, validado por curl 2026-06-14 contra a aba estilizada do Rei das Joias):** normalizar só na leitura com `canon_` (`Date → yyyy-MM-dd` via `Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd')`), sem tocar na escrita. Trade-off aceito: não protege `codcliente` com zero à esquerda. Pendente: o snippet de referência nos docs ainda tem o bug; a planilha da TransbyShop em produção pode ter o dedup quebrado se `data_venda` não estiver como texto — verificar sem alterar o motor (invariante de parity).
+- **Apps Script — armadilhas de deploy/teste (onboarding Rei das Joias, 2026-06-14).** (1) Redeploy só vale se **Salvar (Ctrl+S) ANTES** + escolher **"Nova versão"** na implantação existente (mantém a mesma `/exec`); vários redeploys "silenciosos" não pegaram. Pôr sonda `?ping=1 → {pong: VERSION}` no `doGet` e confirmar por curl ANTES de retestar a lógica. (2) `getSheetByName('Respostas')` é match **exato**: se a aba com o visual não se chamar exatamente assim, o script cria uma aba nova vazia e grava nela. (3) curl de POST: **não usar `-X POST`** — força POST no redirect 302→`googleusercontent/echo` (GET-only) → 405 "Drive não pôde abrir"; usar `--data`/`--data-urlencode` sem `-X` (curl baixa pra GET no redirect e lê o JSON).
 
 ### Reference
 
