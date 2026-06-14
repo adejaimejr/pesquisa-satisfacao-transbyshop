@@ -1,43 +1,75 @@
-# Pesquisa de Satisfação - TransbyShop
+# Pesquisa de Satisfação — Plataforma CSAT Multi-Tenant
 
-Formulário de pesquisa de satisfação (CSAT) para clientes da TransbyShop, com relatórios executivos consolidados por período.
+Motor único que serve um formulário de pesquisa de satisfação (CSAT) **white-label** para vários clientes — cada um no seu domínio, com marca (cores, logo, título) e backend de dados próprios. **Um container, N domínios.**
+
+Validado em produção com a **TransbyShop**; generalizado para multi-cliente.
 
 ## Stack
 
-- HTML estático + CSS
-- nginx:alpine (Docker)
-- Google Apps Script para receber as respostas
-
-## Rotas servidas
-
-| URL | Conteúdo |
-|---|---|
-| `/` | Formulário de pesquisa (`pesquisa-transbyshop.html`) |
-| `/relatorio-<slug>.html` | Relatórios executivos da pasta `relatorios/` (autocontidos) |
-
-Exemplo: `dominio.com/relatorio-transbyshop-13mar-18mai-2026.html`
+- HTML estático + CSS (sem build, sem Node)
+- `nginx:alpine` + `envsubst` (renderiza um `index.html` por cliente no boot)
+- Google Apps Script (1 por cliente) → planilha Google
+- Deploy: Docker / Dokploy, múltiplos domínios → mesmo container
 
 ## Como funciona
 
-### Pesquisa
-1. O cliente acessa a URL com parâmetros (firstname, codcliente, filial, telefone, data_venda)
-2. Avalia de 1 a 5 estrelas e pode deixar comentários
-3. Os dados são enviados para uma planilha Google via Apps Script
+1. **1 template** — `engine/pesquisa.template.html`, com tokens `${PRIMARY}`, `${COMPANY_NAME}`, etc.
+2. **1 pasta por cliente** — `clientes/<slug>/` com `config.env` (marca + domínio), logo e `relatorios/`.
+3. **No boot**, `docker-entrypoint.sh`:
+   - renderiza template + `config.env` → `index.html` do cliente (`envsubst`, lista explícita de tokens);
+   - injeta o Apps Script URL do cliente (env `APPS_SCRIPT_URL_<SLUG>`) no placeholder `__APPS_SCRIPT_URL__`;
+   - copia logo + relatórios;
+   - gera o `map $host → pasta` do nginx. `default` = `transbyshop`.
 
-### Relatórios
-Cada arquivo `relatorios/relatorio-*.html` é um relatório executivo autocontido (sem dependência de assets externos — logo embutido em base64). Basta adicionar um novo HTML na pasta e ele aparece automaticamente em `/<nome-do-arquivo>.html` após o próximo build.
+Detalhes em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## Deploy
+## Estrutura
 
-O projeto roda via Docker com nginx. O `docker-entrypoint.sh` injeta a variável de ambiente `APPS_SCRIPT_URL` no HTML do formulário antes de iniciar o nginx (os relatórios não recebem injeção).
-
-```bash
-docker build -t pesquisa-transbyshop .
-docker run -e APPS_SCRIPT_URL=https://script.google.com/macros/s/SEU_ID/exec -p 80:80 pesquisa-transbyshop
+```
+engine/
+  pesquisa.template.html   # motor (tokens ${...})
+  nginx.conf.template      # server: root $tenant_root
+clientes/
+  <slug>/
+    config.env             # marca + domínio do cliente
+    logo.(svg|png)
+    relatorios/*.html      # relatórios executivos (autocontidos)
+    index.html             # (opcional) design 100% próprio — override do template
+docker-entrypoint.sh       # render por cliente + map de domínios
+Dockerfile
+docs/                      # estrutura multiagente (AGENTS.md + docs/)
 ```
 
-## Variáveis de ambiente
+## Clientes
 
-| Variável | Descrição |
+| Slug | Domínio | Marca |
+|---|---|---|
+| `transbyshop` | (default / catch-all) | Vinho escuro — **produção, design imutável** |
+| `reidasjoias` | `reidasjoias.persua.link` | Pêssego & Ouro |
+
+## Rotas (por domínio)
+
+| URL | Conteúdo |
 |---|---|
-| `APPS_SCRIPT_URL` | URL do Google Apps Script (web app) |
+| `/` | Formulário CSAT do cliente |
+| `/relatorio-*.html` | Relatórios executivos do cliente |
+
+## Deploy (Dokploy)
+
+```bash
+docker build -t pesquisa-csat .
+docker run -p 80:80 \
+  -e APPS_SCRIPT_URL_TRANSBYSHOP="https://script.google.com/macros/s/.../exec" \
+  -e APPS_SCRIPT_URL_REIDASJOIAS="https://script.google.com/macros/s/.../exec" \
+  pesquisa-csat
+```
+
+Adicionar os domínios dos clientes ao deploy no Dokploy (todos → o mesmo container).
+
+## Adicionar um cliente novo
+
+Ver [docs/ONBOARDING.md](docs/ONBOARDING.md).
+
+## Para IA / contribuidores
+
+Projeto usa estrutura multiagente. Comece por [AGENTS.md](AGENTS.md) e [docs/ONBOARDING.md](docs/ONBOARDING.md).
