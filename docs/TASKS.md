@@ -11,7 +11,7 @@
 - **Dedup TransbyShop em produção:** verificar se a planilha sofre da mesma coerção de data que quebrava o "já respondeu" — sem alterar o motor (invariante de parity).
 - **Snippet de referência (docs):** o `Code.gs` de exemplo ainda tem os bugs corrigidos nesta sessão; atualizar.
 - **Domínio TransbyShop:** `pesquisa.transbyshop.com.br` confirmado; serve pelo `default` do map (funciona). Rota explícita é opcional.
-- **Design individual por cliente** (fase seguinte): tamanho/posição da logo do Rei das Joias; copy das perguntas (hoje herdada da TransbyShop, com termos de varejo — "Troca Express", "Crediário").
+- **Alerta interno de detrator (opcional, #6):** Apps Script dispara aviso ao gestor quando nota<=3 (nome/telefone/motivos). Parkado: o cliente optou por tela de sucesso unica, sem roteamento publico Google/WhatsApp; este aviso e server-side e independe da tela.
 
 ## Ideias / Roadmap
 
@@ -21,6 +21,7 @@
 
 ## Concluidas
 
+- **Redesign individual do Rei das Joias** — override Nivel 3 (`clientes/reidasjoias/index.html`): carinhas no lugar de emoji, icones SVG, "Nao" neutro, contraste AA, header com filete, selecionado com brilho, acessibilidade, tela de sucesso unica clara, copy enxuta, "Troca Express"->"Troca". Em producao (reidasjoias.persua.link); parity TransbyShop intacta. ✓ (2026-06-14)
 - **Apps Script do Rei das Joias** — web app + planilha, contrato validado por curl, 3 bugs corrigidos (coerção de data, column-type, autorizo). ✓ (2026-06-14)
 - **Deploy Dokploy** — merge `feat/multi-tenant`→`main`, motor em produção; reidasjoias.persua.link + pesquisa.transbyshop.com.br servindo correto, ambos `apps_script=ok`. ✓ (2026-06-14)
 - Motor multi-tenant (template + config + entrypoint + nginx map + override nível-3). ✓

@@ -15,6 +15,42 @@ Registro cronológico inverso das sessões de IA. Sessão mais recente no topo.
 ### Proximo Passo Recomendado
 ```
 
+## 2026-06-14 (sessao 2) - Claude (Opus 4.8)
+
+### Objetivo
+
+Reuniao multi-squad (design/brand/c-level/advisory/anti-slop) para melhorar o design da pesquisa do Rei das Joias e implementar o redesign individual em producao, sem tocar na TransbyShop.
+
+### O Que Foi Feito
+
+- **Reuniao de chiefs (com votos):** convergencia em (A) trocar emojis por iconografia propria, (B) ramificar tela de sucesso, (C) recuperar detrator, (D) contraste AA. Diagnostico: "vitrine linda, caixa fechado".
+- **Redesign Nivel 3:** criado `clientes/reidasjoias/index.html` (override total). Carinhas em linha (SVG) no lugar de emoji; chips/recompra com icones SVG; "Nao" neutro (sem vermelho); contraste AA; header com filete de ouro; estado selecionado com gradiente + brilho; acessibilidade (inputs reais sr-only, foco, aria-label); `replaceState` protegido.
+- **Iteracoes com o cliente (em producao):** nota com carinhas (descartadas as gemas douradas); "Troca Express" -> "Troca" (casa com o Sheet ja ajustado pelo cliente); telas finais escuro -> claro (creme + ouro); **removido o roteamento Google/WhatsApp** -> tela unica "Sua opiniao foi registrada!"; copy encurtada; selo removido; CSS morto varrido (.success-cta/stars/secondary/tag, vars --hero).
+- **Deploy:** commits em `main`; Dokploy buildou (rebuild manual/re-trigger; ~1.5-4 min). Verificado por curl: redesign no ar em `reidasjoias.persua.link`; parity da TransbyShop intacta (diff vazio, 919=919) a cada push.
+
+### Arquivos Criados Ou Alterados
+
+- Novo: `clientes/reidasjoias/index.html`.
+- Docs: `SESSION.md`, `DECISIONS.md`, `TASKS.md`, `CHANGELOG.md`, `MEMORY.md`.
+
+### Decisoes Tomadas
+
+Ver `DECISIONS.md`: redesign via override Nivel 3 (nao tokenizar o template); header mantem pessego + craft (rejeita borgonha); tela de sucesso unica (reverte o roteamento por nota).
+
+### Aprendizados Para MEMORY.md
+
+- Override Nivel 3 nao passa por `envsubst` (cp cru + `sed` so do `__APPS_SCRIPT_URL__`); cores hardcoded; nao herda correcoes do template.
+- Dokploy nao sobe sozinho de forma confiavel no 1o push; precisa Deploy/Rebuild (ou re-trigger por commit vazio); build ~1.5-4 min.
+
+### Pendencias
+
+- Task #6 (alerta interno de detrator no Apps Script, nota<=3) parkado/opcional — cliente simplificou o lado publico.
+- Pendencias antigas seguem (outage TransbyShop, limpeza de probes/linhas TESTE, snippet de referencia do Apps Script com bug, dedup TransbyShop em producao).
+
+### Proximo Passo Recomendado
+
+- Qualquer agente com contexto: se quiser reativar valor de CRM, implementar o alerta interno de detrator (#6) no `Code.gs` (server-side, independe da tela). Caso contrario, o redesign do rei esta fechado e em producao.
+
 ## 2026-06-14 - Claude (Opus 4.8)
 
 ### Objetivo

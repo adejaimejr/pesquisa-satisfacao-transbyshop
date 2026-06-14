@@ -1,5 +1,32 @@
 # DECISIONS
 
+## 2026-06-14 - Redesign do Rei das Joias via override Nivel 3
+
+### Decisao
+O redesign individual do Rei das Joias vive em `clientes/reidasjoias/index.html` (override Nivel 3), nao no template compartilhado.
+### Motivo
+Parity da TransbyShop e byte-a-byte; mexer no template arriscaria producao. O override e servido cru (sem `envsubst`), isolado, e ja era o caminho previsto para design individual.
+### Impacto
+Cores hardcoded (nao usa tokens `${...}`). Nao herda correcoes do template. So `__APPS_SCRIPT_URL__` e injetado. Contrato de dados preservado (satisfacao/recompra/motivos/comentario/autorizo + hidden).
+
+## 2026-06-14 - Header do Rei das Joias: mantem pessego + craft (rejeita borgonha)
+
+### Decisao
+Manter o header pessego `#FEE5DB` e adicionar autoridade por craft (filete de ouro, contraste AA, iconografia propria), em vez de trocar para header escuro/borgonha.
+### Motivo
+Posicionamento real e joalheria acessivel (crediario, troca, preco em destaque), nao alta joalheria; o pessego foi cor escolhida pelo cliente e passa AA. Reversivel/A-B se necessario.
+### Impacto
+Estetica clara e coesa em toda a tela (form + telas finais claras creme+ouro).
+
+## 2026-06-14 - Tela de sucesso unica (reverte roteamento por nota)
+
+### Decisao
+Apos enviar, todos veem uma unica tela clara "Sua opiniao foi registrada!". Removido o roteamento promotor->Google / detrator->WhatsApp.
+### Motivo
+Pedido do cliente por UX mais simples. Contraria a recomendacao do board (capturar review / recuperar detrator) — trade-off de ROI aceito pelo dono.
+### Impacto
+Sem CTAs Google/WhatsApp na pagina. O alerta interno de detrator (server-side) fica como tarefa opcional (#6).
+
 ## 2026-06-13 - Arquitetura multi-tenant: 1 motor + pasta por cliente
 
 ### Decisao
