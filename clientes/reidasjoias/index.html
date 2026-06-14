@@ -181,9 +181,9 @@
     }
     .nota-card.selected {
       border-color: var(--gold-deep);
-      background: var(--gold);
+      background: linear-gradient(150deg, #DCC087 0%, var(--gold) 50%, var(--gold-deep) 100%);
       transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(158,123,61,0.28);
+      box-shadow: 0 8px 22px rgba(158,123,61,0.40), inset 0 1px 0 rgba(255,255,255,0.5);
     }
     .nota-card.selected .nota-num { color: var(--on-gold); }
     .nota-card.selected .nota-face { color: var(--on-gold); transform: scale(1.06); }
@@ -210,10 +210,11 @@
     .chip:hover { border-color: var(--gold); color: var(--gold-deep); }
     .chip:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
     .chip.on {
-      background: var(--gold-deep);
+      background: linear-gradient(150deg, var(--gold-deep) 0%, #6E5A2E 100%);
       border-color: var(--gold-deep);
       color: #FFFFFF;
-      box-shadow: 0 3px 12px rgba(158,123,61,0.22);
+      box-shadow: 0 4px 14px rgba(158,123,61,0.34);
+      transform: translateY(-1px);
     }
     .chip.on svg { color: var(--req-bg); }
     .chips-wrap.error { outline: 2px solid var(--gold); border-radius: 14px; outline-offset: 4px; }
@@ -243,10 +244,10 @@
     .rc-btn:hover:not(.selected) { border-color: var(--gold); transform: translateY(-2px); }
     .rc-btn:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
     .rc-btn.selected {
-      background: var(--gold-deep);
+      background: linear-gradient(150deg, var(--gold-deep) 0%, #6E5A2E 100%);
       border-color: var(--gold-deep);
       transform: translateY(-2px);
-      box-shadow: 0 5px 16px rgba(158,123,61,0.25);
+      box-shadow: 0 6px 18px rgba(158,123,61,0.34), inset 0 1px 0 rgba(255,255,255,0.14);
     }
     .rc-btn.selected .rc-icon, .rc-btn.selected .rc-label { color: #FFFFFF; }
 
@@ -333,11 +334,11 @@
     .btn-submit:active:not(:disabled) { transform: scale(0.98); }
     .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(15%); }
 
-    /* ── Telas finais (hero) ── */
+    /* ── Telas finais (claras, alinhadas ao header) ── */
     .success-screen {
       display: none;
       animation: cardIn 0.5s cubic-bezier(.16,1,.3,1) both;
-      background: linear-gradient(160deg, var(--hero1) 0%, var(--hero2) 45%, var(--hero3) 100%);
+      background: linear-gradient(165deg, #FFF7EF 0%, #FEE9E0 55%, #F6EAD6 100%);
       border-radius: var(--r-lg);
       min-height: 500px;
       position: relative;
@@ -349,41 +350,41 @@
       content: '';
       position: absolute;
       inset: 12px;
-      border: 1px solid rgba(198,161,91,0.25);
+      border: 1px solid rgba(158,123,61,0.32);
       border-radius: 20px;
       pointer-events: none;
     }
     .success-logo { margin-bottom: 26px; position: relative; z-index: 1; }
-    .success-logo img { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+    .success-logo img { height: 30px; width: auto; opacity: 0.95; }
     .success-mark {
-      width: 64px; height: 64px;
+      width: 66px; height: 66px;
       border-radius: 50%;
-      border: 1.5px solid rgba(198,161,91,0.5);
-      background: rgba(198,161,91,0.12);
+      border: 1.5px solid rgba(158,123,61,0.45);
+      background: rgba(198,161,91,0.14);
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 22px;
       position: relative; z-index: 1;
     }
-    .success-mark svg { width: 30px; height: 30px; color: var(--gold); }
+    .success-mark svg { width: 30px; height: 30px; color: var(--gold-deep); }
     .success-eyebrow {
       font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
-      color: rgba(232,210,160,0.6);
+      color: var(--gold-dark);
       margin-bottom: 10px; position: relative; z-index: 1;
     }
     .success-screen h2 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(2.1rem, 8vw, 2.7rem);
-      font-weight: 700; color: #fff; line-height: 1.08;
+      font-weight: 700; color: var(--bronze); line-height: 1.08;
       margin-bottom: 6px; position: relative; z-index: 1;
     }
-    .success-screen h2 em { font-style: italic; color: #E8D2A0; }
-    .success-stars { color: #E8D2A0; letter-spacing: 5px; font-size: 16px; margin: 12px 0 4px; position: relative; z-index: 1; }
-    .success-divider { width: 44px; height: 1px; background: rgba(198,161,91,0.4); margin: 16px auto 18px; position: relative; z-index: 1; }
+    .success-screen h2 em { font-style: italic; color: var(--gold-deep); }
+    .success-stars { color: var(--gold); letter-spacing: 5px; font-size: 18px; margin: 12px 0 4px; position: relative; z-index: 1; }
+    .success-divider { width: 44px; height: 1px; background: rgba(158,123,61,0.45); margin: 16px auto 18px; position: relative; z-index: 1; }
     .success-screen p {
-      font-size: 14px; color: rgba(255,255,255,0.78); line-height: 1.65;
-      max-width: 260px; margin: 0 auto 26px; position: relative; z-index: 1;
+      font-size: 14px; color: var(--muted); line-height: 1.65;
+      max-width: 264px; margin: 0 auto 26px; position: relative; z-index: 1;
     }
-    .success-screen p strong { color: #fff; font-weight: 600; }
+    .success-screen p strong { color: var(--ink); font-weight: 600; }
     .success-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 9px;
       background: var(--gold); color: var(--on-gold);
@@ -391,23 +392,23 @@
       padding: 14px 26px; font-size: 14px; font-weight: 600;
       font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none;
       position: relative; z-index: 1;
-      box-shadow: 0 6px 22px rgba(0,0,0,0.25);
-      transition: transform 0.2s;
+      box-shadow: 0 6px 20px rgba(158,123,61,0.32);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .success-cta:hover { transform: translateY(-2px); }
+    .success-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(158,123,61,0.4); }
     .success-cta svg { width: 18px; height: 18px; }
     .success-secondary {
       display: block; margin: 14px auto 0;
       background: none; border: none;
-      color: rgba(232,210,160,0.7); font-size: 12px;
+      color: var(--muted); font-size: 12px;
       font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: underline;
       position: relative; z-index: 1;
     }
     .success-tag {
       display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      background: var(--req-bg); border: 1px solid var(--border);
       border-radius: 999px; padding: 11px 22px;
-      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9);
+      font-size: 13px; font-weight: 600; color: var(--gold-dark);
       position: relative; z-index: 1;
     }
 
@@ -525,9 +526,9 @@
             Preço / Condições
           </label>
           <label class="chip">
-            <input type="radio" class="sr-only" name="motivos" value="Troca Express" />
+            <input type="radio" class="sr-only" name="motivos" value="Troca" />
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a8 8 0 0113-2.5L20 9M20 9V4M20 15a8 8 0 01-13 2.5L4 15M4 15v5"/></svg>
-            Troca Express
+            Troca
           </label>
           <label class="chip">
             <input type="radio" class="sr-only" name="motivos" value="Atendimento da equipe" />
@@ -602,38 +603,17 @@
       <div class="success-tag">Obrigado por ser Rei das Joias.</div>
     </div>
 
-    <!-- Sucesso — Promotor (nota 4-5) -->
-    <div class="success-screen" id="successPromoter">
+    <!-- Sucesso — tela única -->
+    <div class="success-screen" id="successScreen">
       <div class="success-logo"><img src="logo.png" alt="Rei das Joias" /></div>
       <div class="success-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 9.5 12 3 19 9.5 12 21Z"/><path d="M5 9.5H19M9 9.5 12 21M15 9.5 12 21M12 3 9 9.5M12 3 15 9.5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
       </div>
       <div class="success-eyebrow">Avaliação registrada</div>
-      <h2>Que honra<br><em>ter você!</em></h2>
-      <div class="success-stars" aria-hidden="true">★ ★ ★ ★ ★</div>
+      <h2>Sua opinião<br><em>foi registrada!</em></h2>
       <div class="success-divider"></div>
-      <p>Você faz parte da realeza Rei das Joias. Conta pro Google o que você achou? Leva <strong>30 segundos</strong> e ajuda demais.</p>
-      <a class="success-cta" id="googleCta" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.5 6 6.5.4-5 4.2 1.7 6.4L12 17l-5.7 3 1.7-6.4-5-4.2 6.5-.4z"/></svg>
-        Avaliar no Google
-      </a>
-    </div>
-
-    <!-- Sucesso — Detrator (nota 1-3) -->
-    <div class="success-screen" id="successDetractor">
-      <div class="success-logo"><img src="logo.png" alt="Rei das Joias" /></div>
-      <div class="success-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 01-12 7.7L3 21l1.8-6A8.5 8.5 0 1121 11.5z"/></svg>
-      </div>
-      <div class="success-eyebrow">Recebemos sua opinião</div>
-      <h2>Vamos<br><em>resolver isso.</em></h2>
-      <div class="success-divider"></div>
-      <p>Sentimos muito que não tenha sido perfeito. Uma de nossas <strong>gerentes quer te ouvir agora</strong> e cuidar disso pessoalmente.</p>
-      <a class="success-cta" id="whatsCta" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 01-12 7.7L3 21l1.8-6A8.5 8.5 0 1121 11.5z"/></svg>
-        Falar com a gerência
-      </a>
-      <button class="success-secondary" type="button" id="detractorDismiss">Prefiro só registrar minha opinião</button>
+      <p>Muito obrigado! Sua opinião <strong>será considerada pela nossa equipe</strong> para melhorar cada vez mais o seu atendimento.</p>
+      <div class="success-tag">Obrigado por ser Rei das Joias.</div>
     </div>
 
   </div>
@@ -641,14 +621,6 @@
 
 <script>
 window.addEventListener('DOMContentLoaded', () => {
-
-  /* ===========================================================
-     PREENCHER (Rei das Joias) — deixe '' para esconder o CTA.
-     GOOGLE_REVIEW_URL: link direto de avaliação (ex: https://g.page/r/XXXX/review)
-     WHATSAPP_NUMBER: só dígitos com DDI/DDD (ex: 5547999990000)
-     =========================================================== */
-  const GOOGLE_REVIEW_URL = '';
-  const WHATSAPP_NUMBER   = '';
 
   const APPS_SCRIPT_URL = '__APPS_SCRIPT_URL__';
 
@@ -729,32 +701,11 @@ window.addEventListener('DOMContentLoaded', () => {
   wireGroup('recompra', 'rc-btn');
 
   // ── Telas finais ──
-  function showFinal(nota) {
+  function showFinal() {
     form.style.display = 'none';
     document.querySelector('.card-header').style.display = 'none';
-
-    if (nota >= 4) {
-      const cta = document.getElementById('googleCta');
-      if (GOOGLE_REVIEW_URL) cta.href = GOOGLE_REVIEW_URL; else cta.style.display = 'none';
-      document.getElementById('successPromoter').style.display = 'block';
-    } else {
-      const cta = document.getElementById('whatsCta');
-      if (WHATSAPP_NUMBER) {
-        const codc = document.getElementById('codcliente').value;
-        const msg  = `Olá! Sou ${nome || 'cliente'} (cód ${codc || '-'}) e gostaria de falar sobre minha compra na Rei das Joias.`;
-        cta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-      } else {
-        cta.style.display = 'none';
-      }
-      document.getElementById('successDetractor').style.display = 'block';
-    }
+    document.getElementById('successScreen').style.display = 'block';
   }
-
-  const detractorDismiss = document.getElementById('detractorDismiss');
-  if (detractorDismiss) detractorDismiss.addEventListener('click', () => {
-    document.getElementById('successDetractor').querySelector('.success-cta').style.display = 'none';
-    detractorDismiss.style.display = 'none';
-  });
 
   // ── Submit ──
   form.addEventListener('submit', function (e) {
@@ -786,8 +737,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const nota = parseInt(notaInput.value, 10);
-
     submitted = true;
     submitBtn.disabled    = true;
     submitBtn.textContent = 'Enviando…';
@@ -795,7 +744,7 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(this) })
       .then(res => {
         if (res.ok) {
-          showFinal(nota);
+          showFinal();
         } else {
           submitted = false;
           alert('Erro ao enviar. Tente novamente.');
