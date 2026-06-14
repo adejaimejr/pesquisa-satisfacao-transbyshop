@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pesquisa de Satisfação — Rei das Joias</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Rei das Joias — "Pêssego & Ouro" (override individual, contraste AA) */
+      --peach:      #FEE5DB;
+      --gold:       #C6A15B;
+      --gold-deep:  #9E7B3D;
+      --gold-dark:  #6E5A2E;
+      --bronze:     #5A4A22;
+      --ink:        #463E2C;
+      --muted:      #6E5A2E;   /* escurecido vs #8A6E3C original p/ passar AA como texto */
+      --border:     #EADFC8;
+      --req-bg:     #F3E9D5;
+      --on-gold:    #241A06;
+      --hero1:      #2A2110;
+      --hero2:      #463614;
+      --hero3:      #6E5A2E;
+      --r-sm: 12px;
+      --r-md: 18px;
+      --r-lg: 28px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FFFFFF;
+      min-height: 100vh;
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 14px 52px;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 90% 8%, rgba(198,161,91,0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 8% 92%, rgba(158,123,61,0.08) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: #FFFFFF;
+      border-radius: var(--r-lg);
+      box-shadow: 0 2px 4px rgba(158,123,61,0.06), 0 14px 52px rgba(158,123,61,0.12);
+      width: 100%;
+      max-width: 448px;
+      overflow: hidden;
+      animation: cardIn 0.55s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(28px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Header com filete de ouro (craft) ── */
+    .card-header {
+      background: var(--peach);
+      padding: 34px 28px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute;
+      inset: 9px;
+      border: 1px solid rgba(158,123,61,0.32);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+    .logo-wrap { margin-bottom: 16px; position: relative; z-index: 1; }
+    .logo-wrap img { height: 30px; width: auto; }
+    .header-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 7px;
+      position: relative;
+      z-index: 1;
+    }
+    .card-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 6vw, 2.3rem);
+      font-weight: 700;
+      color: var(--bronze);
+      line-height: 1.12;
+      position: relative;
+      z-index: 1;
+    }
+    .card-header h1 em { font-style: italic; opacity: 0.9; }
+
+    /* ── Body ── */
+    .card-body { padding: 28px 24px 32px; }
+    .section { margin-bottom: 26px; }
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #FFF6EE;
+    }
+    .badge.req { color: var(--gold-dark); background: var(--req-bg); }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ── Nota: gemas ── */
+    .nota-grid { display: flex; gap: 7px; margin-top: 11px; }
+    .nota-card {
+      flex: 1;
+      border-radius: var(--r-sm);
+      border: 2px solid var(--border);
+      background: #FFFFFF;
+      cursor: pointer;
+      padding: 12px 4px 10px;
+      text-align: center;
+      transition: border-color 0.18s, background 0.18s, transform 0.18s, box-shadow 0.18s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: block;
+    }
+    .nota-num {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      transition: color 0.18s;
+      line-height: 1;
+    }
+    .nota-face {
+      display: block;
+      width: 22px; height: 22px;
+      margin: 5px auto 0;
+      color: var(--gold-dark);
+      transition: transform 0.18s, color 0.18s;
+    }
+    .nota-card:hover:not(.selected) {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(198,161,91,0.18);
+    }
+    .nota-card:focus-within {
+      outline: 2px solid var(--gold-deep);
+      outline-offset: 2px;
+    }
+    .nota-card.selected {
+      border-color: var(--gold-deep);
+      background: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(158,123,61,0.28);
+    }
+    .nota-card.selected .nota-num { color: var(--on-gold); }
+    .nota-card.selected .nota-face { color: var(--on-gold); transform: scale(1.06); }
+
+    /* ── Chips (motivos) ── */
+    .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: border-color 0.16s, background 0.16s, color 0.16s, box-shadow 0.16s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip svg { width: 15px; height: 15px; color: var(--gold-deep); transition: color 0.16s; }
+    .chip:hover { border-color: var(--gold); color: var(--gold-deep); }
+    .chip:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
+    .chip.on {
+      background: var(--gold-deep);
+      border-color: var(--gold-deep);
+      color: #FFFFFF;
+      box-shadow: 0 3px 12px rgba(158,123,61,0.22);
+    }
+    .chip.on svg { color: var(--req-bg); }
+    .chips-wrap.error { outline: 2px solid var(--gold); border-radius: 14px; outline-offset: 4px; }
+
+    /* ── Recompra ── */
+    .recompra-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 11px; }
+    .rc-btn {
+      border-radius: var(--r-sm);
+      border: 1.5px solid var(--border);
+      background: #FFFFFF;
+      cursor: pointer;
+      padding: 14px 8px 12px;
+      text-align: center;
+      transition: all 0.18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: block;
+    }
+    .rc-icon { display: block; width: 22px; height: 22px; margin: 0 auto 6px; color: var(--gold-deep); transition: color 0.18s; }
+    .rc-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color 0.18s;
+    }
+    .rc-btn:hover:not(.selected) { border-color: var(--gold); transform: translateY(-2px); }
+    .rc-btn:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
+    .rc-btn.selected {
+      background: var(--gold-deep);
+      border-color: var(--gold-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(158,123,61,0.25);
+    }
+    .rc-btn.selected .rc-icon, .rc-btn.selected .rc-label { color: #FFFFFF; }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 0 26px;
+    }
+
+    /* ── Textarea ── */
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      background: #FFFDFB;
+      color: var(--ink);
+      resize: vertical;
+      min-height: 88px;
+      transition: border-color 0.18s, background 0.18s;
+      margin-top: 10px;
+    }
+    textarea::placeholder { color: var(--muted); opacity: 0.7; }
+    textarea:focus { outline: none; border-color: var(--gold-deep); background: #fff; }
+
+    /* ── LGPD ── */
+    .lgpd-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 22px;
+      padding: 13px 14px;
+      background: #FFFDFB;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .lgpd-row.highlight { border-color: var(--gold-deep); background: var(--req-bg); animation: shake 0.4s ease; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .lgpd-row input[type="checkbox"] {
+      min-width: 17px; height: 17px;
+      accent-color: var(--gold-deep);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    .lgpd-row label { font-size: 11.5px; color: var(--muted); line-height: 1.55; cursor: pointer; }
+
+    /* ── Botão ── */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--gold);
+      color: var(--on-gold);
+      border: none;
+      border-radius: 999px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: transform 0.22s, box-shadow 0.22s, opacity 0.22s;
+      box-shadow: 0 5px 22px rgba(158,123,61,0.32);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -110%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-submit:hover:not(:disabled)::before { left: 110%; }
+    .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(158,123,61,0.38); }
+    .btn-submit:active:not(:disabled) { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(15%); }
+
+    /* ── Telas finais (hero) ── */
+    .success-screen {
+      display: none;
+      animation: cardIn 0.5s cubic-bezier(.16,1,.3,1) both;
+      background: linear-gradient(160deg, var(--hero1) 0%, var(--hero2) 45%, var(--hero3) 100%);
+      border-radius: var(--r-lg);
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+      padding: 46px 28px 42px;
+      text-align: center;
+    }
+    .success-screen::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(198,161,91,0.25);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+    .success-logo { margin-bottom: 26px; position: relative; z-index: 1; }
+    .success-logo img { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+    .success-mark {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(198,161,91,0.5);
+      background: rgba(198,161,91,0.12);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 22px;
+      position: relative; z-index: 1;
+    }
+    .success-mark svg { width: 30px; height: 30px; color: var(--gold); }
+    .success-eyebrow {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(232,210,160,0.6);
+      margin-bottom: 10px; position: relative; z-index: 1;
+    }
+    .success-screen h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.1rem, 8vw, 2.7rem);
+      font-weight: 700; color: #fff; line-height: 1.08;
+      margin-bottom: 6px; position: relative; z-index: 1;
+    }
+    .success-screen h2 em { font-style: italic; color: #E8D2A0; }
+    .success-stars { color: #E8D2A0; letter-spacing: 5px; font-size: 16px; margin: 12px 0 4px; position: relative; z-index: 1; }
+    .success-divider { width: 44px; height: 1px; background: rgba(198,161,91,0.4); margin: 16px auto 18px; position: relative; z-index: 1; }
+    .success-screen p {
+      font-size: 14px; color: rgba(255,255,255,0.78); line-height: 1.65;
+      max-width: 260px; margin: 0 auto 26px; position: relative; z-index: 1;
+    }
+    .success-screen p strong { color: #fff; font-weight: 600; }
+    .success-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      background: var(--gold); color: var(--on-gold);
+      border: none; border-radius: 999px;
+      padding: 14px 26px; font-size: 14px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none;
+      position: relative; z-index: 1;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.25);
+      transition: transform 0.2s;
+    }
+    .success-cta:hover { transform: translateY(-2px); }
+    .success-cta svg { width: 18px; height: 18px; }
+    .success-secondary {
+      display: block; margin: 14px auto 0;
+      background: none; border: none;
+      color: rgba(232,210,160,0.7); font-size: 12px;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: underline;
+      position: relative; z-index: 1;
+    }
+    .success-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px; padding: 11px 22px;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9);
+      position: relative; z-index: 1;
+    }
+
+    /* ── Loading overlay ── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; transition: opacity 0.3s ease;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold-deep);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 380px) {
+      body { padding: 16px 10px 44px; }
+      .card-header { padding: 26px 20px 22px; }
+      .card-body   { padding: 22px 18px 26px; }
+      .nota-num { font-size: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Loading overlay (some por padrão; só reaparece se precisar checar "já respondeu") -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<div class="card">
+
+  <!-- Header -->
+  <div class="card-header">
+    <div class="logo-wrap">
+      <img src="logo.png" alt="Rei das Joias" />
+    </div>
+    <div class="header-eyebrow" id="eyebrow">Sua opinião importa</div>
+    <h1>Como foi sua<br><em>experiência?</em></h1>
+  </div>
+
+  <!-- Body -->
+  <div class="card-body">
+
+    <form id="csatForm">
+
+      <input type="hidden" name="timestamp"  id="timestamp" />
+      <input type="hidden" name="data_venda" id="data_venda" />
+      <input type="hidden" name="codcliente" id="codcliente" />
+      <input type="hidden" name="firstname"  id="firstname" />
+      <input type="hidden" name="telefone"   id="telefone" />
+      <input type="hidden" name="filial"     id="filial" />
+
+      <!-- 1. Nota (gemas) -->
+      <div class="section">
+        <div class="section-label" id="lblNota">
+          Como você avalia sua experiência de compra?
+          <span class="badge req">obrigatório</span>
+        </div>
+        <div class="nota-grid" role="radiogroup" aria-labelledby="lblNota">
+          <label class="nota-card">
+            <input type="radio" class="sr-only" name="satisfacao" value="1" required aria-label="Nota 1 de 5 — muito insatisfeito" />
+            <span class="nota-num">1</span>
+            <svg class="nota-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9.8v0.5 M15 9.8v0.5 M8 15.5Q12 12.8 16 15.5"/></svg>
+          </label>
+          <label class="nota-card">
+            <input type="radio" class="sr-only" name="satisfacao" value="2" aria-label="Nota 2 de 5" />
+            <span class="nota-num">2</span>
+            <svg class="nota-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9.8v0.5 M15 9.8v0.5 M8.5 15.2Q12 14 15.5 15.2"/></svg>
+          </label>
+          <label class="nota-card">
+            <input type="radio" class="sr-only" name="satisfacao" value="3" aria-label="Nota 3 de 5" />
+            <span class="nota-num">3</span>
+            <svg class="nota-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9.8v0.5 M15 9.8v0.5 M8.5 15H15.5"/></svg>
+          </label>
+          <label class="nota-card">
+            <input type="radio" class="sr-only" name="satisfacao" value="4" aria-label="Nota 4 de 5" />
+            <span class="nota-num">4</span>
+            <svg class="nota-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9.8v0.5 M15 9.8v0.5 M8.5 14.6Q12 16 15.5 14.6"/></svg>
+          </label>
+          <label class="nota-card">
+            <input type="radio" class="sr-only" name="satisfacao" value="5" aria-label="Nota 5 de 5 — encantado" />
+            <span class="nota-num">5</span>
+            <svg class="nota-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9 9.8v0.5 M15 9.8v0.5 M8 14Q12 17 16 14"/></svg>
+          </label>
+        </div>
+      </div>
+
+      <!-- 2. Motivos -->
+      <div class="section">
+        <div class="section-label" id="lblMotivo">
+          O que mais influenciou sua avaliação?
+          <span class="badge req">obrigatório</span>
+        </div>
+        <div class="chips-wrap" id="chipsWrap" role="radiogroup" aria-labelledby="lblMotivo">
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Variedade de produtos" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+            Variedade
+          </label>
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Qualidade dos produtos" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M5 9.5 12 3 19 9.5 12 21Z"/><path d="M5 9.5H19M9 9.5 12 21M15 9.5 12 21"/></svg>
+            Qualidade
+          </label>
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Preço e condições" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13l7-7 9 9-7 7z"/><circle cx="8.5" cy="9.5" r="1.2"/></svg>
+            Preço / Condições
+          </label>
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Troca Express" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9a8 8 0 0113-2.5L20 9M20 9V4M20 15a8 8 0 01-13 2.5L4 15M4 15v5"/></svg>
+            Troca Express
+          </label>
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Atendimento da equipe" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.3-7-9.3A4 4 0 0112 8a4 4 0 017 2.7C19 15.7 12 20 12 20z"/></svg>
+            Atendimento
+          </label>
+          <label class="chip">
+            <input type="radio" class="sr-only" name="motivos" value="Crediário" />
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg>
+            Crediário
+          </label>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 3. Recompra -->
+      <div class="section">
+        <div class="section-label" id="lblRecompra">
+          Você pretende fazer novos pedidos?
+          <span class="badge req">obrigatório</span>
+        </div>
+        <div class="recompra-grid" role="radiogroup" aria-labelledby="lblRecompra">
+          <label class="rc-btn">
+            <input type="radio" class="sr-only" name="recompra" value="Sim" required aria-label="Sim, pretendo comprar de novo" />
+            <svg class="rc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1 12H7zM9 8a3 3 0 016 0"/></svg>
+            <span class="rc-label">Sim</span>
+          </label>
+          <label class="rc-btn">
+            <input type="radio" class="sr-only" name="recompra" value="Talvez" aria-label="Talvez" />
+            <svg class="rc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.2 9a2.8 2.8 0 015.5.8c0 1.9-2.7 2.5-2.7 4.2"/><circle cx="12" cy="17.6" r="0.6"/></svg>
+            <span class="rc-label">Talvez</span>
+          </label>
+          <label class="rc-btn">
+            <input type="radio" class="sr-only" name="recompra" value="Não" aria-label="Não pretendo comprar de novo" />
+            <svg class="rc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12h7"/></svg>
+            <span class="rc-label">Não</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 4. Comentário -->
+      <div class="section">
+        <div class="section-label">
+          Quer deixar algum comentário, sugestão ou elogio?
+          <span class="badge">opcional</span>
+        </div>
+        <textarea name="comentario" aria-label="Comentário, sugestão ou elogio" placeholder="Escreva aqui o que quiser…"></textarea>
+      </div>
+
+      <!-- LGPD -->
+      <div class="lgpd-row">
+        <input type="checkbox" id="autorizo" name="autorizo" required />
+        <label for="autorizo">
+          Autorizo o uso dos meus dados para fins de contato e melhoria do atendimento, conforme a LGPD.
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn" disabled>Enviar minha opinião</button>
+    </form>
+
+    <!-- Já respondeu -->
+    <div class="success-screen" id="alreadyScreen">
+      <div class="success-logo"><img src="logo.png" alt="Rei das Joias" /></div>
+      <div class="success-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <div class="success-eyebrow">Esta compra já foi avaliada</div>
+      <h2>Sua opinião<br><em>foi registrada!</em></h2>
+      <div class="success-divider"></div>
+      <p>Você já avaliou esta compra e sua opinião <strong>será considerada pela nossa equipe</strong> para melhorar cada vez mais o seu atendimento.</p>
+      <div class="success-tag">Obrigado por ser Rei das Joias.</div>
+    </div>
+
+    <!-- Sucesso — Promotor (nota 4-5) -->
+    <div class="success-screen" id="successPromoter">
+      <div class="success-logo"><img src="logo.png" alt="Rei das Joias" /></div>
+      <div class="success-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 9.5 12 3 19 9.5 12 21Z"/><path d="M5 9.5H19M9 9.5 12 21M15 9.5 12 21M12 3 9 9.5M12 3 15 9.5"/></svg>
+      </div>
+      <div class="success-eyebrow">Avaliação registrada</div>
+      <h2>Que honra<br><em>ter você!</em></h2>
+      <div class="success-stars" aria-hidden="true">★ ★ ★ ★ ★</div>
+      <div class="success-divider"></div>
+      <p>Você faz parte da realeza Rei das Joias. Conta pro Google o que você achou? Leva <strong>30 segundos</strong> e ajuda demais.</p>
+      <a class="success-cta" id="googleCta" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.5 6 6.5.4-5 4.2 1.7 6.4L12 17l-5.7 3 1.7-6.4-5-4.2 6.5-.4z"/></svg>
+        Avaliar no Google
+      </a>
+    </div>
+
+    <!-- Sucesso — Detrator (nota 1-3) -->
+    <div class="success-screen" id="successDetractor">
+      <div class="success-logo"><img src="logo.png" alt="Rei das Joias" /></div>
+      <div class="success-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 01-12 7.7L3 21l1.8-6A8.5 8.5 0 1121 11.5z"/></svg>
+      </div>
+      <div class="success-eyebrow">Recebemos sua opinião</div>
+      <h2>Vamos<br><em>resolver isso.</em></h2>
+      <div class="success-divider"></div>
+      <p>Sentimos muito que não tenha sido perfeito. Uma de nossas <strong>gerentes quer te ouvir agora</strong> e cuidar disso pessoalmente.</p>
+      <a class="success-cta" id="whatsCta" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 01-12 7.7L3 21l1.8-6A8.5 8.5 0 1121 11.5z"/></svg>
+        Falar com a gerência
+      </a>
+      <button class="success-secondary" type="button" id="detractorDismiss">Prefiro só registrar minha opinião</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+
+  /* ===========================================================
+     PREENCHER (Rei das Joias) — deixe '' para esconder o CTA.
+     GOOGLE_REVIEW_URL: link direto de avaliação (ex: https://g.page/r/XXXX/review)
+     WHATSAPP_NUMBER: só dígitos com DDI/DDD (ex: 5547999990000)
+     =========================================================== */
+  const GOOGLE_REVIEW_URL = '';
+  const WHATSAPP_NUMBER   = '';
+
+  const APPS_SCRIPT_URL = '__APPS_SCRIPT_URL__';
+
+  // ── Parâmetros da URL ──
+  const p = new URLSearchParams(window.location.search);
+  const nome = p.get('firstname') || '';
+  document.getElementById('timestamp').value  = new Date().toISOString();
+  document.getElementById('data_venda').value = p.get('data_venda') || '';
+  document.getElementById('codcliente').value = p.get('codcliente') || '';
+  document.getElementById('firstname').value  = nome;
+  document.getElementById('telefone').value   = p.get('telefone')   || '';
+  document.getElementById('filial').value     = p.get('filial')     || '';
+
+  if (nome) document.getElementById('eyebrow').textContent = `${nome}, sua opinião importa`;
+
+  try { history.replaceState(null, '', window.location.pathname); } catch (e) { /* iframe sandbox / origin opaca: ignora */ }
+
+  // ── "Já respondeu?": form aparece IMEDIATAMENTE; checa em segundo plano ──
+  const codcliente = p.get('codcliente') || '';
+  const data_venda = p.get('data_venda') || '';
+  const form = document.getElementById('csatForm');
+
+  function fetchWithTimeout(url, timeout) {
+    return Promise.race([
+      fetch(url),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
+    ]);
+  }
+  async function checkAlreadyResponded(retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const res  = await fetchWithTimeout(
+          `${APPS_SCRIPT_URL}?codcliente=${encodeURIComponent(codcliente)}&data_venda=${encodeURIComponent(data_venda)}`,
+          3000
+        );
+        const data = await res.json();
+        return data.already_responded === true;
+      } catch (err) {
+        if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
+      }
+    }
+    return false;
+  }
+
+  let submitted = false;
+  if (codcliente && data_venda) {
+    checkAlreadyResponded().then(jaRespondeu => {
+      if (jaRespondeu && !submitted) {
+        form.style.display = 'none';
+        document.querySelector('.card-header').style.display = 'none';
+        document.getElementById('alreadyScreen').style.display = 'block';
+      }
+    });
+  }
+
+  // ── LGPD habilita o botão ──
+  const autorizoCheck = document.getElementById('autorizo');
+  const submitBtn     = document.getElementById('submitBtn');
+  const lgpdRow       = document.querySelector('.lgpd-row');
+  autorizoCheck.addEventListener('change', () => {
+    submitBtn.disabled = !autorizoCheck.checked;
+    if (autorizoCheck.checked) lgpdRow.classList.remove('highlight');
+  });
+
+  // ── Seleção visual (radios reais → evento change cobre mouse + teclado) ──
+  function wireGroup(name, cls) {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+      input.addEventListener('change', () => {
+        document.querySelectorAll(`.${cls}`).forEach(el => el.classList.remove(cls === 'chip' ? 'on' : 'selected'));
+        const box = input.closest(`.${cls}`);
+        if (box) box.classList.add(cls === 'chip' ? 'on' : 'selected');
+        if (name === 'motivos') document.getElementById('chipsWrap').classList.remove('error');
+      });
+    });
+  }
+  wireGroup('satisfacao', 'nota-card');
+  wireGroup('motivos', 'chip');
+  wireGroup('recompra', 'rc-btn');
+
+  // ── Telas finais ──
+  function showFinal(nota) {
+    form.style.display = 'none';
+    document.querySelector('.card-header').style.display = 'none';
+
+    if (nota >= 4) {
+      const cta = document.getElementById('googleCta');
+      if (GOOGLE_REVIEW_URL) cta.href = GOOGLE_REVIEW_URL; else cta.style.display = 'none';
+      document.getElementById('successPromoter').style.display = 'block';
+    } else {
+      const cta = document.getElementById('whatsCta');
+      if (WHATSAPP_NUMBER) {
+        const codc = document.getElementById('codcliente').value;
+        const msg  = `Olá! Sou ${nome || 'cliente'} (cód ${codc || '-'}) e gostaria de falar sobre minha compra na Rei das Joias.`;
+        cta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+      } else {
+        cta.style.display = 'none';
+      }
+      document.getElementById('successDetractor').style.display = 'block';
+    }
+  }
+
+  const detractorDismiss = document.getElementById('detractorDismiss');
+  if (detractorDismiss) detractorDismiss.addEventListener('click', () => {
+    document.getElementById('successDetractor').querySelector('.success-cta').style.display = 'none';
+    detractorDismiss.style.display = 'none';
+  });
+
+  // ── Submit ──
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (!autorizoCheck.checked) {
+      lgpdRow.classList.remove('highlight');
+      void lgpdRow.offsetWidth;
+      lgpdRow.classList.add('highlight');
+      lgpdRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const notaInput     = document.querySelector('input[name="satisfacao"]:checked');
+    const motivoInput   = document.querySelector('input[name="motivos"]:checked');
+    const recompraInput = document.querySelector('input[name="recompra"]:checked');
+
+    if (!notaInput) {
+      document.querySelector('.nota-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (!motivoInput) {
+      document.getElementById('chipsWrap').classList.add('error');
+      document.getElementById('chipsWrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (!recompraInput) {
+      document.querySelector('.recompra-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const nota = parseInt(notaInput.value, 10);
+
+    submitted = true;
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Enviando…';
+
+    fetch(APPS_SCRIPT_URL, { method: 'POST', body: new FormData(this) })
+      .then(res => {
+        if (res.ok) {
+          showFinal(nota);
+        } else {
+          submitted = false;
+          alert('Erro ao enviar. Tente novamente.');
+          submitBtn.disabled    = false;
+          submitBtn.textContent = 'Enviar minha opinião';
+        }
+      })
+      .catch(() => {
+        submitted = false;
+        alert('Erro de conexão. Verifique sua internet e tente novamente.');
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Enviar minha opinião';
+      });
+  });
+
+});
+</script>
+</body>
+</html>
