@@ -10,7 +10,7 @@ Plataforma CSAT multi-tenant: 1 motor (`nginx:alpine` + shell), 1 pasta por clie
 
 Estado (após 2026-06-14): **backend + deploy 100% no ar e validados**.
 
-- `main` é a branch de deploy (Dokploy builda `main`). **2 commits de docs locais não pushados** (`9593e51`, `789cede`) — pushar nesta sessão.
+- `main` é a branch de deploy (Dokploy builda `main`). **Há commits de docs locais não pushados** (fecho da sessão 2026-06-14) — rodar `git push origin main` nesta sessão.
 - **TransbyShop:** `pesquisa.transbyshop.com.br`, design vinho, **APROVADO em produção**.
 - **Rei das Joias:** `reidasjoias.persua.link`, design "Pêssego & Ouro" (só recoloração via tokens). Apps Script + planilha próprios funcionando, **dedup robusto** (v7: `getDisplayValues()` + `setFormula` texto — trata `dd/mm/aaaa` e zeros à esquerda). Schema 10 colunas, sem `autorizo`. (Script ainda tem probes temporárias `?ping`/`?debug` — podem ser removidas num v8 limpo.)
 
@@ -52,7 +52,7 @@ Apps Script do rei deployado (v7) e validado. O override DEVE manter:
 ## Deploy / teste
 
 - Testar o render **localmente** antes (docker build + run; abrir o index gerado do rei).
-- Subir: commitar em `main` + push (junto dos 2 commits de docs pendentes) → Dokploy builda `main`.
+- Subir: commitar em `main` + push (junto dos commits de docs pendentes) → Dokploy builda `main`.
 - Pós-deploy: abrir `https://reidasjoias.persua.link/` (design novo) + 1 submit real → planilha do rei; reabrir mesma URL → "já respondeu". **E conferir que `pesquisa.transbyshop.com.br` continua idêntica** (regressão).
 
 ## Critical files
