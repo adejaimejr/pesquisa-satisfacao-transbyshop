@@ -185,6 +185,18 @@
     .nota-card.selected .nota-num { color: var(--on-gold); }
     .nota-card.selected .nota-face { color: var(--on-gold); transform: scale(1.06); }
 
+    /* Coloração por sentimento na nota selecionada (1 vermelho → 5 verde; 3 dourado) */
+    .nota-card.selected:has(input[value="1"]) { background: #FBEAEA; border-color: #D26A66; box-shadow: 0 8px 22px rgba(168,45,45,0.22); }
+    .nota-card.selected:has(input[value="2"]) { background: #FBEDE4; border-color: #DD8A4E; box-shadow: 0 8px 22px rgba(153,72,27,0.20); }
+    .nota-card.selected:has(input[value="3"]) { background: #F7EDD6; border-color: #C6A15B; box-shadow: 0 8px 22px rgba(158,123,61,0.22); }
+    .nota-card.selected:has(input[value="4"]) { background: #EEF4E0; border-color: #93B45F; box-shadow: 0 8px 22px rgba(79,122,30,0.20); }
+    .nota-card.selected:has(input[value="5"]) { background: #E7F1DC; border-color: #5E9E3E; box-shadow: 0 8px 22px rgba(59,109,17,0.22); }
+    .nota-card.selected:has(input[value="1"]) .nota-num, .nota-card.selected:has(input[value="1"]) .nota-face { color: #A32D2D; }
+    .nota-card.selected:has(input[value="2"]) .nota-num, .nota-card.selected:has(input[value="2"]) .nota-face { color: #99481B; }
+    .nota-card.selected:has(input[value="3"]) .nota-num, .nota-card.selected:has(input[value="3"]) .nota-face { color: #8A6A2C; }
+    .nota-card.selected:has(input[value="4"]) .nota-num, .nota-card.selected:has(input[value="4"]) .nota-face { color: #4F7A1E; }
+    .nota-card.selected:has(input[value="5"]) .nota-num, .nota-card.selected:has(input[value="5"]) .nota-face { color: #3B6D11; }
+
     /* ── Chips (motivos) ── */
     .chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
     .chip {
@@ -207,13 +219,13 @@
     .chip:hover { border-color: var(--gold); color: var(--gold-deep); }
     .chip:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
     .chip.on {
-      background: linear-gradient(150deg, var(--gold-deep) 0%, #6E5A2E 100%);
+      background: var(--gold);
       border-color: var(--gold-deep);
-      color: #FFFFFF;
-      box-shadow: 0 4px 14px rgba(158,123,61,0.34);
+      color: var(--on-gold);
+      box-shadow: 0 4px 14px rgba(158,123,61,0.30);
       transform: translateY(-1px);
     }
-    .chip.on svg { color: var(--req-bg); }
+    .chip.on svg { color: var(--on-gold); }
     .chips-wrap.error { outline: 2px solid var(--gold); border-radius: 14px; outline-offset: 4px; }
 
     /* ── Recompra ── */
@@ -241,12 +253,12 @@
     .rc-btn:hover:not(.selected) { border-color: var(--gold); transform: translateY(-2px); }
     .rc-btn:focus-within { outline: 2px solid var(--gold-deep); outline-offset: 2px; }
     .rc-btn.selected {
-      background: linear-gradient(150deg, var(--gold-deep) 0%, #6E5A2E 100%);
+      background: var(--gold);
       border-color: var(--gold-deep);
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(158,123,61,0.34), inset 0 1px 0 rgba(255,255,255,0.14);
+      box-shadow: 0 6px 18px rgba(158,123,61,0.30);
     }
-    .rc-btn.selected .rc-icon, .rc-btn.selected .rc-label { color: #FFFFFF; }
+    .rc-btn.selected .rc-icon, .rc-btn.selected .rc-label { color: var(--on-gold); }
 
     .section-divider {
       height: 1px;
