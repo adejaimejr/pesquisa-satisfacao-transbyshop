@@ -637,7 +637,7 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
       const res  = await fetchWithTimeout(
         `${APPS_SCRIPT_URL}?codcliente=${encodeURIComponent(codcliente)}&data_venda=${encodeURIComponent(data_venda)}`,
-        2500
+        10000 // Apps Script tem cold-start (~7-8s); timeout generoso p/ o dedup completar (caso warm e rapido)
       );
       const data = await res.json();
       return data.already_responded === true;

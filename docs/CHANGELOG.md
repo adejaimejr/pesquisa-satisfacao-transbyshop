@@ -17,3 +17,4 @@ Historico de mudancas relevantes.
 - Adiciona `clientes/reidasjoias/apps-script.gs` (referência; deploy é manual no editor do Google).
 - v9 grava por NOME de coluna (header-mapped) — `vendedor` em qualquer posição funciona; v7/v8 gravavam por índice fixo e deslocavam ao inserir coluna no meio.
 - Corrige nos docs: aba real = `PesquisaSatisfação` (não `Respostas`); pegadinha do deploy (`/exec` serve a versão implantada, exige "Nova versão" na implantação existente).
+- Fix dedup: timeout da checagem "já respondeu" 2,5s → 10s. O Apps Script tem cold-start (~7,6s medido); 2,5s caía no fail-open e deixava responder 2×. 10s cobre o cold-start (warm segue ~1s).
