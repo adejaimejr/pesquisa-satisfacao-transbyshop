@@ -18,3 +18,4 @@ Historico de mudancas relevantes.
 - v9 grava por NOME de coluna (header-mapped) — `vendedor` em qualquer posição funciona; v7/v8 gravavam por índice fixo e deslocavam ao inserir coluna no meio.
 - Corrige nos docs: aba real = `PesquisaSatisfação` (não `Respostas`); pegadinha do deploy (`/exec` serve a versão implantada, exige "Nova versão" na implantação existente).
 - Fix dedup: timeout da checagem "já respondeu" 2,5s → 10s. O Apps Script tem cold-start (~7,6s medido); 2,5s caía no fail-open e deixava responder 2×. 10s cobre o cold-start (warm segue ~1s).
+- Dedup DEFINITIVO no servidor (apps-script.gs v10): o `doPost` checa (codcliente+data_venda) ANTES de gravar e NÃO grava duplicado (+ `LockService`). A checagem no cliente é só UX e falha em incognito/cold-start; a garantia real é server-side. Independe de Dokploy (só Apps Script). SHEET_NAME ajustado p/ `Respostas` (aba real confirmada por `?ping`).
