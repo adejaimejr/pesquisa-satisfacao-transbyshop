@@ -423,7 +423,7 @@
 <body>
 
 <!-- Loading overlay (some por padrão; só reaparece se precisar checar "já respondeu") -->
-<div class="loading-overlay hidden" id="loadingOverlay">
+<div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
 </div>
 
@@ -441,7 +441,7 @@
   <!-- Body -->
   <div class="card-body">
 
-    <form id="csatForm">
+    <form id="csatForm" style="display:none;">
 
       <input type="hidden" name="timestamp"  id="timestamp" />
       <input type="hidden" name="data_venda" id="data_venda" />
@@ -620,10 +620,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
   try { history.replaceState(null, '', window.location.pathname); } catch (e) { /* iframe sandbox / origin opaca: ignora */ }
 
-  // ── "Já respondeu?": form aparece IMEDIATAMENTE; checa em segundo plano ──
+  // ── "Já respondeu?": checa ANTES de mostrar o form (spinner curto, fail-open) ──
+  // O form NUNCA é puxado no meio do preenchimento: ou aparece já liberado, ou nem aparece.
   const codcliente = p.get('codcliente') || '';
   const data_venda = p.get('data_venda') || '';
-  const form = document.getElementById('csatForm');
+  const form    = document.getElementById('csatForm');
+  const overlay = document.getElementById('loadingOverlay');
 
   function fetchWithTimeout(url, timeout) {
     return Promise.race([
@@ -631,31 +633,29 @@ window.addEventListener('DOMContentLoaded', () => {
       new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeout))
     ]);
   }
-  async function checkAlreadyResponded(retries = 3, delay = 1000) {
-    for (let i = 0; i < retries; i++) {
-      try {
-        const res  = await fetchWithTimeout(
-          `${APPS_SCRIPT_URL}?codcliente=${encodeURIComponent(codcliente)}&data_venda=${encodeURIComponent(data_venda)}`,
-          3000
-        );
-        const data = await res.json();
-        return data.already_responded === true;
-      } catch (err) {
-        if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
-      }
+  async function checkAlreadyResponded() {
+    try {
+      const res  = await fetchWithTimeout(
+        `${APPS_SCRIPT_URL}?codcliente=${encodeURIComponent(codcliente)}&data_venda=${encodeURIComponent(data_venda)}`,
+        2500
+      );
+      const data = await res.json();
+      return data.already_responded === true;
+    } catch (err) {
+      return false; // fail-open: na dúvida, libera o form (melhor responder que bloquear indevido)
     }
-    return false;
+  }
+  function showForm()    { overlay.classList.add('hidden'); form.style.display = 'block'; }
+  function showAlready() {
+    overlay.classList.add('hidden');
+    document.querySelector('.card-header').style.display = 'none';
+    document.getElementById('alreadyScreen').style.display = 'block';
   }
 
-  let submitted = false;
   if (codcliente && data_venda) {
-    checkAlreadyResponded().then(jaRespondeu => {
-      if (jaRespondeu && !submitted) {
-        form.style.display = 'none';
-        document.querySelector('.card-header').style.display = 'none';
-        document.getElementById('alreadyScreen').style.display = 'block';
-      }
-    });
+    checkAlreadyResponded().then(function (ja) { ja ? showAlready() : showForm(); });
+  } else {
+    showForm();
   }
 
   // ── LGPD habilita o botão ──
@@ -719,7 +719,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    submitted = true;
     submitBtn.disabled    = true;
     submitBtn.textContent = 'Enviando…';
 
@@ -728,14 +727,12 @@ window.addEventListener('DOMContentLoaded', () => {
         if (res.ok) {
           showFinal();
         } else {
-          submitted = false;
           alert('Erro ao enviar. Tente novamente.');
           submitBtn.disabled    = false;
           submitBtn.textContent = 'Enviar minha opinião';
         }
       })
       .catch(() => {
-        submitted = false;
         alert('Erro de conexão. Verifique sua internet e tente novamente.');
         submitBtn.disabled    = false;
         submitBtn.textContent = 'Enviar minha opinião';
